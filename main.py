@@ -3,8 +3,9 @@ import telebot
 from telebot import types
 import ruz
 import re
+import os
 
-token = '1491361372:AAFYb8HoCGoC_QAE8NPHhdktao7OtMySZLo'
+token = os.environ['TOKEN']
 bot = telebot.TeleBot(token)
 
 
