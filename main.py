@@ -1,4 +1,3 @@
-#!/usr/bin/python3.6
 import telebot
 from telebot import types
 import ruz
