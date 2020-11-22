@@ -72,7 +72,7 @@ def get_schedule(message):
     filename = str(schedule[0]['discipline']) + ' ' + str(schedule[0]['lecturer']) + ' ' + str(schedule[0]['date'])
     scheduler = BackgroundScheduler()
     scheduler.start()
-    scheduler.add_job(get_feedback, 'date', run_date=datetime(2020, 11, 22, 14, 6, 20), args=[message])
+    scheduler.add_job(get_feedback, 'date', run_date=datetime(2020, 11, 22, 14, 6, 20), args=[message]) # Choose date
 
 
 def get_feedback(message):
@@ -113,7 +113,7 @@ def get_opinion(message):
         #     bot.send_message(message.chat.id, 'Thank you!')
         scheduler = BackgroundScheduler()
         scheduler.start()
-        scheduler.add_job(search_professor, 'date', run_date=datetime(2020, 11, 22, 14, 6, 50), args=[])
+        scheduler.add_job(search_professor, 'date', run_date=datetime(2020, 11, 22, 14, 6, 50), args=[]) # Choose date
         bot.send_message(message.chat.id, 'Thank you!')
     else:
         bot.send_message(message.chat.id, 'See you soon!')
@@ -133,7 +133,7 @@ def search_professor():
     smtp_server = 'smtp.gmail.com'
     sender_email = os.environ['sender_email']
     password = os.environ['password']
-    receiver_email = 'ra4wv2@gmail.com'
+    receiver_email = 'Your email here' 
     subject = "Today's evaluation"
     with open(filename + 'opinions.txt', encoding='utf-8') as fp:
         a = fp.read() + '\n\nRespectfully,\nYour favourite bot'
