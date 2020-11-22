@@ -7,7 +7,7 @@ from datetime import datetime
 import smtplib, ssl
 from email import encoders
 
-token = '1491361372:AAFYb8HoCGoC_QAE8NPHhdktao7OtMySZLo'
+token = os.environ['TOKEN']
 bot = telebot.TeleBot(token)
 
 global schedule
@@ -112,8 +112,8 @@ def search_professor():
     email = schedule[0]['lecturerEmail']
     port = 587
     smtp_server = 'smtp.gmail.com'
-    sender_email = 'fdsffgshgh@gmail.com'
-    password = '***'
+    sender_email = os.environ['SENDER_EMAIL']
+    password = os.environ['PASSWORD']
     receiver_email = email
     subject = "Week's evaluation"
     with open('opinion_results.txt', encoding='utf-8') as fp:
