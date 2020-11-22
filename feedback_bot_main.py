@@ -7,7 +7,7 @@ from datetime import datetime
 import smtplib, ssl
 from email import encoders
 
-token = '1491361372:AAFYb8HoCGoC_QAE8NPHhdktao7OtMySZLo'
+token = os.environ['TOKEN']
 bot = telebot.TeleBot(token)
 
 global schedule
