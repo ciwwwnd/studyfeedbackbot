@@ -1,3 +1,4 @@
+#!/usr/bin/python3.6
 import telebot
 from telebot import types
 import ruz
@@ -5,7 +6,7 @@ import re
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 import smtplib, ssl
-from email import encoders 
+from email import encoders
 
 token = '1491361372:AAFYb8HoCGoC_QAE8NPHhdktao7OtMySZLo'
 bot = telebot.TeleBot(token)
@@ -16,8 +17,7 @@ global filename
 
 @bot.message_handler(commands=['start'])
 def starting(message):
-    email = bot.send_message(message.chat.id,
-                             "Привет! Я люблю собирать обратную связь, это моя работа. Пожалуйста, напишите свой адрес корпоративной почты.")
+    email = bot.send_message(message.chat.id, "Hi! My job is to collect student feedback. Please tell me your student e-mail (should end with @edu.hse.ru).")
     bot.register_next_step_handler(email, check_email)
 
 
@@ -29,7 +29,7 @@ def check_email(message):
     check = ruz.utils.is_valid_hse_email(mail)
     if not check:
         msg = bot.send_message(message.chat.id,
-                               'Введенный адрес не является корпоративной почтой НИУ ВШЭ. Введите корректный адрес.')
+                               'This address is incorrect. Please enter a valid HSE e-mail.')
         bot.register_next_step_handler(msg, check_email)
     else:
         schedule = ruz.person_lessons(mail)
@@ -37,7 +37,7 @@ def check_email(message):
             get_schedule(message)
         else:
             msg = bot.send_message(message.chat.id,
-                                   'Для этого адреса расписание отсутствует. Возможно, вы ошиблись. Проверьте правильность написания и отправьте мне корректный адрес.')
+                                   'Could not find the schedule for this e-mail address. Please check your spelling and try again.')
             bot.register_next_step_handler(msg, check_email)
 
 
@@ -77,17 +77,17 @@ def get_feedback(message):
     callback_5 = types.InlineKeyboardButton(text="5", callback_data="5")
     keyboard.add(callback_1, callback_2, callback_3, callback_4, callback_5)
 
-    bot.send_message(message.chat.id, 'Как ты оцениваешь это занятие? Пожалуйста, оцени по шкале от 1 до 5.',
+    bot.send_message(message.chat.id, 'Please rate this class on a scale from 1 to 5.',
                      reply_markup=keyboard)
     msg = bot.send_message(message.chat.id,
-                           'Напиши комментарии, замечания или жалобы относительно этого занятия. Если не хочешь оставлять отзыв, просто напиши "нет".')
+                           'Take a minute to tell us what you think about the class. You can tell us what was unclear or something you enjoyed. If you do not want to provide feedback, please write "no".')
     bot.register_next_step_handler(msg, get_opinion)
 
 
 def get_opinion(message):
     global schedule
     global filename
-    if message.text.lower() != 'нет':
+    if message.text.lower() != 'no':
         with open(filename + 'opinions.txt', 'a', encoding='utf-8') as f:
             f.write(message.text + '\n')
         years = []
@@ -103,9 +103,9 @@ def get_opinion(message):
             days.append(int(lect_date[2]))
             scheduler.add_job(search_professor, 'date', run_date=datetime(years[i], months[i], days[i], 23, 30, 00),
                               args=[])
-            bot.send_message(message.chat.id, 'Спасибо!')
+            bot.send_message(message.chat.id, 'Thank you!')
     else:
-        bot.send_message(message.chat.id, 'Хорошо, спасибо. До встречи!')
+        bot.send_message(message.chat.id, 'See you soon!')
 
 
 def search_professor():
@@ -116,7 +116,7 @@ def search_professor():
     sender_email = 'fdsffgshgh@gmail.com'
     password = '***'
     receiver_email = email
-    subject = 'Оценка пар за неделю'
+    subject = "Week's evaluation"
     with open('opinion_results.txt', encoding='utf-8') as fp:
         a = fp.read()
         message = 'Subject: {}\n\n{}'.format(subject, a).encode('utf-8')
@@ -136,20 +136,20 @@ def callback_inline(call):
         if call.data == '1':
             f.write('1 ')
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                  text="Спасибо за оценку!")
+                                  text="Thank you!")
         if call.data == '2':
             f.write('2 ')
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                  text="Принято!")
+                                  text="Thank you!")
         if call.data == '3':
             f.write('3 ')
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Понял!")
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Thank you!")
         if call.data == '4':
             f.write('4 ')
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Супер!")
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Thank you!")
         if call.data == '5':
             f.write('5 ')
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Ого!")
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Thank you!")
 
 
 def main():
