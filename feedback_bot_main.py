@@ -131,8 +131,8 @@ def search_professor():
         op.write('Average student mark: ' + str(avg_mark) + '\n')
     port = 587
     smtp_server = 'smtp.gmail.com'
-    sender_email = os.environ['sender_email']
-    password = os.environ['password']
+    sender_email = os.environ['SENDER_EMAIL']
+    password = os.environ['PASSWORD']
     receiver_email = 'Your email here' 
     subject = "Today's evaluation"
     with open(filename + 'opinions.txt', encoding='utf-8') as fp:
